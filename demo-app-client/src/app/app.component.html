@@ -1,0 +1,11 @@
+<md-toolbar color="primary">Candidate Management</md-toolbar>
+<md-card >
+  <md-list class="flex-container" *ngFor="let employee of employees" fxLayout="column">
+    <md-list-item  layout-padding>
+      <span fxFlex="30">{{employee.firstName}}</span>
+      <span fxFlex="30">{{employee.lastName}}</span>
+      <span fxFlex="30">{{employee.description}}</span>
+    </md-list-item>
+  </md-list>
+
+</md-card>
