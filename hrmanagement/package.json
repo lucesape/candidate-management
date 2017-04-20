@@ -27,7 +27,7 @@
   },
   "scripts": {
     "watch": "webpack --watch",
-    "webpack": "./node_modules/.bin/webpack --progress --colors --config webpack.config.js --bail"
+    "webpack": "webpack -p"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
