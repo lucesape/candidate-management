@@ -15,7 +15,7 @@ If you want to do it yourself, visit http://start.spring.io and pick these items
 - H2
 - Lombok (May want to ensure your IDE has support for this as well.)
 
-# Step 2 - Importing and installing
+# Step 1 - Importing and installing
 1. Clone the repository in a desired location: git clone https://github.com/serban-petrescu/candidate-management.git
 2. Checkout to blajv's branch: git checkout blajv
 3. Import the project into your desired IDE as a maven project
@@ -24,7 +24,7 @@ If you want to do it yourself, visit http://start.spring.io and pick these items
 6. Run the project
 7. Access http://localhost:8080/ and a table with an entry should be displayed
 
-# Step 3 - Rebuilding and making changes
+# Step 2 - Rebuilding and making changes
 There are two ways:
  I. 
   1.Edit the "application.properties" file
