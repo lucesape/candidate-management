@@ -1,0 +1,151 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'roboto-fontface',
+1 verbose cli   '--save' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.2
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData roboto-fontface
+8 silly fetchNamedPackageData roboto-fontface
+9 silly mapToRegistry name roboto-fontface
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'roboto-fontface',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   escapedName: 'roboto-fontface',
+12 silly mapToRegistry   name: 'roboto-fontface',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri https://registry.npmjs.org/roboto-fontface
+14 verbose request uri https://registry.npmjs.org/roboto-fontface
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 10:52:55
+17 verbose request id c18a1f40c1a50da3
+18 http request GET https://registry.npmjs.org/roboto-fontface
+19 http 200 https://registry.npmjs.org/roboto-fontface
+20 verbose headers { server: 'nginx/1.10.1',
+20 verbose headers   'content-type': 'application/json',
+20 verbose headers   'last-modified': 'Tue, 23 May 2017 13:09:48 GMT',
+20 verbose headers   etag: 'W/"5924349c-38af"',
+20 verbose headers   'content-encoding': 'gzip',
+20 verbose headers   'cache-control': 'max-age=300',
+20 verbose headers   'content-length': '2593',
+20 verbose headers   'accept-ranges': 'bytes',
+20 verbose headers   date: 'Wed, 24 May 2017 07:52:55 GMT',
+20 verbose headers   via: '1.1 varnish',
+20 verbose headers   age: '187',
+20 verbose headers   connection: 'close',
+20 verbose headers   'x-served-by': 'cache-hhn1530-HHN',
+20 verbose headers   'x-cache': 'HIT',
+20 verbose headers   'x-cache-hits': '2',
+20 verbose headers   'x-timer': 'S1495612376.689074,VS0,VE0',
+20 verbose headers   vary: 'Accept-Encoding' }
+21 silly get cb [ 200,
+21 silly get   { server: 'nginx/1.10.1',
+21 silly get     'content-type': 'application/json',
+21 silly get     'last-modified': 'Tue, 23 May 2017 13:09:48 GMT',
+21 silly get     etag: 'W/"5924349c-38af"',
+21 silly get     'content-encoding': 'gzip',
+21 silly get     'cache-control': 'max-age=300',
+21 silly get     'content-length': '2593',
+21 silly get     'accept-ranges': 'bytes',
+21 silly get     date: 'Wed, 24 May 2017 07:52:55 GMT',
+21 silly get     via: '1.1 varnish',
+21 silly get     age: '187',
+21 silly get     connection: 'close',
+21 silly get     'x-served-by': 'cache-hhn1530-HHN',
+21 silly get     'x-cache': 'HIT',
+21 silly get     'x-cache-hits': '2',
+21 silly get     'x-timer': 'S1495612376.689074,VS0,VE0',
+21 silly get     vary: 'Accept-Encoding' } ]
+22 verbose get saving roboto-fontface to C:\Users\blajv\AppData\Roaming\npm-cache\registry.npmjs.org\roboto-fontface\.cache.json
+23 verbose correctMkdir C:\Users\blajv\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+24 silly install normalizeTree
+25 silly loadCurrentTree Finishing
+26 silly loadIdealTree Starting
+27 silly install loadIdealTree
+28 silly cloneCurrentTree Starting
+29 silly install cloneCurrentTreeToIdealTree
+30 silly cloneCurrentTree Finishing
+31 silly loadShrinkwrap Starting
+32 silly install loadShrinkwrap
+33 silly loadShrinkwrap Finishing
+34 silly loadAllDepsIntoIdealTree Starting
+35 silly install loadAllDepsIntoIdealTree
+36 silly resolveWithNewModule roboto-fontface@0.7.0 checking installable status
+37 silly cache add args [ 'roboto-fontface', null ]
+38 verbose cache add spec roboto-fontface
+39 silly cache add parsed spec Result {
+39 silly cache add   raw: 'roboto-fontface',
+39 silly cache add   scope: null,
+39 silly cache add   escapedName: 'roboto-fontface',
+39 silly cache add   name: 'roboto-fontface',
+39 silly cache add   rawSpec: '',
+39 silly cache add   spec: 'latest',
+39 silly cache add   type: 'tag' }
+40 silly addNamed roboto-fontface@latest
+41 verbose addNamed "latest" is being treated as a dist-tag for roboto-fontface
+42 info addNameTag [ 'roboto-fontface', 'latest' ]
+43 silly mapToRegistry name roboto-fontface
+44 silly mapToRegistry using default registry
+45 silly mapToRegistry registry https://registry.npmjs.org/
+46 silly mapToRegistry data Result {
+46 silly mapToRegistry   raw: 'roboto-fontface',
+46 silly mapToRegistry   scope: null,
+46 silly mapToRegistry   escapedName: 'roboto-fontface',
+46 silly mapToRegistry   name: 'roboto-fontface',
+46 silly mapToRegistry   rawSpec: '',
+46 silly mapToRegistry   spec: 'latest',
+46 silly mapToRegistry   type: 'tag' }
+47 silly mapToRegistry uri https://registry.npmjs.org/roboto-fontface
+48 verbose addNameTag registry:https://registry.npmjs.org/roboto-fontface not in flight; fetching
+49 verbose get https://registry.npmjs.org/roboto-fontface not expired, no request
+50 silly addNameTag next cb for roboto-fontface with tag latest
+51 silly addNamed roboto-fontface@0.7.0
+52 verbose addNamed "0.7.0" is a plain semver version for roboto-fontface
+53 silly mapToRegistry name roboto-fontface
+54 silly mapToRegistry using default registry
+55 silly mapToRegistry registry https://registry.npmjs.org/
+56 silly mapToRegistry data Result {
+56 silly mapToRegistry   raw: 'roboto-fontface',
+56 silly mapToRegistry   scope: null,
+56 silly mapToRegistry   escapedName: 'roboto-fontface',
+56 silly mapToRegistry   name: 'roboto-fontface',
+56 silly mapToRegistry   rawSpec: '',
+56 silly mapToRegistry   spec: 'latest',
+56 silly mapToRegistry   type: 'tag' }
+57 silly mapToRegistry uri https://registry.npmjs.org/roboto-fontface
+58 verbose addRemoteTarball https://registry.npmjs.org/roboto-fontface/-/roboto-fontface-0.7.0.tgz not in flight; adding
+59 verbose addRemoteTarball [ 'https://registry.npmjs.org/roboto-fontface/-/roboto-fontface-0.7.0.tgz',
+59 verbose addRemoteTarball   '2f36464e5c99353e8427f55f1fca7be1a8a417d9' ]
+60 info retry fetch attempt 1 at 10:52:55
+61 info attempt registry request try #1 at 10:52:55
+62 http fetch GET https://registry.npmjs.org/roboto-fontface/-/roboto-fontface-0.7.0.tgz
+63 http fetch 200 https://registry.npmjs.org/roboto-fontface/-/roboto-fontface-0.7.0.tgz
+64 verbose stack Error: kill ENOSYS
+64 verbose stack     at exports._errnoException (util.js:1018:11)
+64 verbose stack     at process.kill (internal/process.js:190:13)
+64 verbose stack     at process.listener (C:\Program Files\nodejs\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:86:15)
+64 verbose stack     at emitNone (events.js:91:20)
+64 verbose stack     at process.emit (events.js:185:7)
+64 verbose stack     at processEmit (C:\Program Files\nodejs\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+64 verbose stack     at processEmit (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+64 verbose stack     at Signal.wrap.onsignal (internal/process.js:217:44)
+65 verbose cwd F:\Expert Team\WorkspaceFinal\candidate-management\cm-server
+66 error Windows_NT 6.1.7601
+67 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "roboto-fontface" "--save"
+68 error node v6.10.2
+69 error npm  v3.10.10
+70 error code ENOSYS
+71 error errno ENOSYS
+72 error syscall kill
+73 error kill ENOSYS
+74 error If you need help, you may report this error at:
+74 error     <https://github.com/npm/npm/issues>
+75 verbose exit [ 1, true ]
