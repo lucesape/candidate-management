@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 function fetchCandidates() {
-    let url = "http://192.168.99.102:8080/api/candidates";
+    let url = "http://192.168.99.100:8080/api/candidates";
     return axios.get(url).then(function (response) {
         return response.data._embedded.candidates;
     });
@@ -45,7 +45,7 @@ function fetchTagForCandidateSkill(url) {
     });
 }
 function addCandidate(candidate) {
-    let url = "http://192.168.99.102:8080/api/candidates";
+    let url = "http://192.168.99.100:8080/api/candidates";
     return axios.post(url, candidate)
         .then((response) => {
             return response;
@@ -56,7 +56,7 @@ function addCandidate(candidate) {
 }
 
 function deleteCandidate(candidateId) {
-    let url = "http://192.168.99.102:8080/api/candidates/"+candidateId;
+    let url = "http://192.168.99.100:8080/api/candidates/"+candidateId;
     return axios.delete(url)
         .then((response) => {
             return response;
@@ -68,7 +68,7 @@ function deleteCandidate(candidateId) {
 
 
 function updateCandidate(candidate) {
-    let url = "http://192.168.99.102:8080/api/candidates/"+candidate.id;
+    let url = "http://192.168.99.100:8080/api/candidates/"+candidate.id;
     return axios.put(url, candidate)
         .then((response) => {
             return response;
