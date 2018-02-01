@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
@@ -39,7 +39,7 @@ public class DownloadController {
        this.tagRepository =tagRepository;
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @PostMapping("/list")
     public void downloadCandidateCsv(HttpServletResponse response) throws IOException {
         String[] headers= {"firstName", "lastName", "phone", "email", "educationStatus", "originalStudyYear", "event"};
         writeResponse(response, candidateRepository, Candidate.class);
@@ -47,12 +47,13 @@ public class DownloadController {
     }
 
 
-    @RequestMapping(value = "/education", method = RequestMethod.POST)
+    @PostMapping("/education")
     public void downloadEducationCsv(HttpServletResponse response) throws IOException {
         writeResponse(response, educationRepository, Education.class);
 
     }
-    @RequestMapping(value = "/tag", method = RequestMethod.POST)
+
+    @PostMapping("/tag")
     public void downloadTagCsv(HttpServletResponse response) throws IOException {
         writeResponse(response, tagRepository, Tag.class);
     }
