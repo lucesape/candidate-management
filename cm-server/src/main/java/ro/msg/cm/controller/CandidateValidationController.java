@@ -18,9 +18,9 @@ public class CandidateValidationController {
     private final DuplicateFinderService duplicateFinderService;
 
     @Autowired
-    public CandidateValidationController(ValidationService validationService,DuplicateFinderService duplicateFinderService) {
+    public CandidateValidationController(ValidationService validationService, DuplicateFinderService duplicateFinderService) {
         this.validationService = validationService;
-        this.duplicateFinderService=duplicateFinderService;
+        this.duplicateFinderService = duplicateFinderService;
     }
 
     @PatchMapping("/updateCandidate/{id}")

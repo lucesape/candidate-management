@@ -31,21 +31,23 @@ public class DuplicateFinderService {
     public List<Duplicate> getDuplicates(Long id) {
         Candidate original = candidateRepository.findOne(id);
         List<Duplicate> allDuplicates = new ArrayList<>();
-        Set<Long> ids;
-        ids = candidateRepository.findAllByFirstNameAndLastName(original.getFirstName(), original.getLastName()).stream().map(Candidate::getId).collect(Collectors.toSet());
-        ids.remove(original.getId());
-        if (!ids.isEmpty()) {
-            allDuplicates.add(new Duplicate(original.getId(), ids, DuplicateType.ON_NAME));
-        }
-        ids = candidateRepository.findAllByEmail(original.getEmail()).stream().map(Candidate::getId).collect(Collectors.toSet());
-        ids.remove(original.getId());
-        if (!ids.isEmpty()) {
-            allDuplicates.add(new Duplicate(original.getId(), ids, DuplicateType.ON_EMAIL));
-        }
-        ids = candidateRepository.findAllByPhone(original.getPhone()).stream().map(Candidate::getId).collect(Collectors.toSet());
-        ids.remove(original.getId());
-        if (!ids.isEmpty()) {
-            allDuplicates.add(new Duplicate(original.getId(), ids, DuplicateType.ON_PHONE));
+        if (original != null) {
+            Set<Long> ids;
+            ids = candidateRepository.findAllByFirstNameAndLastName(original.getFirstName(), original.getLastName()).stream().map(Candidate::getId).collect(Collectors.toSet());
+            ids.remove(original.getId());
+            if (!ids.isEmpty()) {
+                allDuplicates.add(new Duplicate(original.getId(), ids, DuplicateType.ON_NAME));
+            }
+            ids = candidateRepository.findAllByEmail(original.getEmail()).stream().map(Candidate::getId).collect(Collectors.toSet());
+            ids.remove(original.getId());
+            if (!ids.isEmpty()) {
+                allDuplicates.add(new Duplicate(original.getId(), ids, DuplicateType.ON_EMAIL));
+            }
+            ids = candidateRepository.findAllByPhone(original.getPhone()).stream().map(Candidate::getId).collect(Collectors.toSet());
+            ids.remove(original.getId());
+            if (!ids.isEmpty()) {
+                allDuplicates.add(new Duplicate(original.getId(), ids, DuplicateType.ON_PHONE));
+            }
         }
         return allDuplicates;
     }
