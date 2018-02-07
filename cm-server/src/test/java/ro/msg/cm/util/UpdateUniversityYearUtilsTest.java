@@ -21,7 +21,6 @@ public class UpdateUniversityYearUtilsTest {
         StartYearProperties underTest = new StartYearProperties();
         underTest.setStartYearDate("10-01");
         updateUniversityYearUtils = new CandidateUtils(underTest);
-
     }
 
     @Test

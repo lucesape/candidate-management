@@ -2,6 +2,7 @@ package ro.msg.cm.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import ro.msg.cm.types.CandidateCheck;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,7 +30,6 @@ public class CandidateNotValidated {
     private String event;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfAdding;
-
     private @ManyToOne
     @JoinColumn(name = "education_id")
     Education education;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.univocity.parsers.annotations.Parsed;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ro.msg.cm.types.CandidateCheck;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,6 +41,8 @@ public class Candidate {
 	@Parsed
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dateOfAdding;
+	@Enumerated(EnumType.STRING)
+	private CandidateCheck checkCandidate = CandidateCheck.NOT_YET_VALIDATED;
 
 	@Transient
 	private int currentStudyYear;
