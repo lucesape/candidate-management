@@ -1,18 +1,23 @@
 package ro.msg.cm.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import ro.msg.cm.exception.CandidateIsAlreadyValidated;
 import ro.msg.cm.exception.CandidateNotFound;
 import ro.msg.cm.model.Candidate;
 import ro.msg.cm.repository.CandidateRepository;
 import ro.msg.cm.types.CandidateCheck;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ValidationService {
 
@@ -27,10 +32,12 @@ public class ValidationService {
         Candidate candidate = candidateRepository.findOne(id);
         if (candidate != null) {
             patchCandidate.forEach((k, v) -> {
-                Field field = ReflectionUtils.findField(Candidate.class, String.valueOf(k));
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, candidate, v);
-                field.setAccessible(false);
+                Method method = ReflectionUtils.findMethod(Candidate.class, "set" + StringUtils.capitalize(String.valueOf(k)));
+                try {
+                    method.invoke(candidate, v);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    log.debug("Message = " + e.getMessage() + " StackTrace = " + Arrays.toString(e.getStackTrace()));
+                }
             });
             return candidateRepository.save(candidate);
         } else {

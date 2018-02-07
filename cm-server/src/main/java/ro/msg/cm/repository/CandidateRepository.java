@@ -17,8 +17,17 @@ package ro.msg.cm.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import ro.msg.cm.model.Candidate;
+import ro.msg.cm.types.CandidateCheck;
 
+import java.util.List;
 
 public interface CandidateRepository extends CrudRepository<Candidate, Long> {
 
+    Iterable<Candidate> findAllByCheckCandidate(CandidateCheck candidateCheck);
+
+    List<Candidate> findAllByFirstNameAndLastName(String firstName, String lastName);
+
+    List<Candidate> findAllByEmail(String email);
+
+    List<Candidate> findAllByPhone(String phone);
 }

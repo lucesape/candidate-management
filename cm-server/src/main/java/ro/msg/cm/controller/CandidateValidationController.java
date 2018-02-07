@@ -3,6 +3,8 @@ package ro.msg.cm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.cm.model.Candidate;
+import ro.msg.cm.pojo.Duplicate;
+import ro.msg.cm.service.DuplicateFinderService;
 import ro.msg.cm.service.ValidationService;
 
 import java.util.List;
@@ -13,10 +15,12 @@ import java.util.Map;
 public class CandidateValidationController {
 
     private final ValidationService validationService;
+    private final DuplicateFinderService duplicateFinderService;
 
     @Autowired
-    public CandidateValidationController(ValidationService validationService) {
+    public CandidateValidationController(ValidationService validationService,DuplicateFinderService duplicateFinderService) {
         this.validationService = validationService;
+        this.duplicateFinderService=duplicateFinderService;
     }
 
     @PatchMapping("/updateCandidate/{id}")
@@ -34,4 +38,8 @@ public class CandidateValidationController {
         validationService.deleteSelectedEntries(ids);
     }
 
+    @GetMapping("/duplicates/{id}")
+    public List<Duplicate> getDuplicates(@PathVariable Long id) {
+        return duplicateFinderService.getDuplicates(id);
+    }
 }
