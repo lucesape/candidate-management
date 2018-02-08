@@ -4,16 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
-import ro.msg.cm.exception.CandidateIsAlreadyValidated;
-import ro.msg.cm.exception.CandidateNotFound;
+import ro.msg.cm.exception.CandidateIsAlreadyValidatedException;
+import ro.msg.cm.exception.CandidateNotFoundException;
 import ro.msg.cm.model.Candidate;
 import ro.msg.cm.repository.CandidateRepository;
 import ro.msg.cm.types.CandidateCheck;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -28,20 +25,18 @@ public class ValidationService {
         this.candidateRepository = candidateRepository;
     }
 
-    public Candidate patchCandidate(Map<Object,Object> patchCandidate, Long id) {
+    public void patchCandidate(Map<Object, Object> patchCandidate, Long id){
         Candidate candidate = candidateRepository.findOne(id);
-        if (candidate != null) {
+        if(candidate!=null) {
             patchCandidate.forEach((k, v) -> {
-                Method method = ReflectionUtils.findMethod(Candidate.class, "set" + StringUtils.capitalize(String.valueOf(k)));
-                try {
-                    method.invoke(candidate, v);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.debug("Message = " + e.getMessage() + " StackTrace = " + Arrays.toString(e.getStackTrace()));
-                }
+                Field field = ReflectionUtils.findField(Candidate.class, String.valueOf(k));
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, candidate, v);
+                field.setAccessible(false);
             });
-            return candidateRepository.save(candidate);
-        } else {
-            throw new CandidateNotFound();
+            candidateRepository.save(candidate);
+        }else {
+            throw new CandidateNotFoundException();
         }
     }
 
@@ -51,10 +46,10 @@ public class ValidationService {
             if (!candidate.getCheckCandidate().equals(CandidateCheck.VALIDATED) && candidate.getCheckCandidate() != null) {
                 candidateRepository.delete(id);
             } else {
-                throw new CandidateIsAlreadyValidated();
+                throw new CandidateIsAlreadyValidatedException();
             }
         } else {
-            throw new CandidateNotFound();
+            throw new CandidateNotFoundException();
         }
     }
 
@@ -63,7 +58,7 @@ public class ValidationService {
             if (candidateRepository.exists(id)) {
                 candidateRepository.delete(id);
             }else {
-                throw new CandidateNotFound("Candidate with id: " + id + " was not found");
+                throw new CandidateNotFoundException("Candidate with id: " + id + " was not found");
             }
         }
     }

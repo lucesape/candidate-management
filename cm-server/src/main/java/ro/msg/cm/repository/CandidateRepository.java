@@ -19,11 +19,12 @@ import org.springframework.data.repository.CrudRepository;
 import ro.msg.cm.model.Candidate;
 import ro.msg.cm.types.CandidateCheck;
 
+import java.util.List;
 import java.util.Set;
 
 public interface CandidateRepository extends CrudRepository<Candidate, Long> {
 
-    Iterable<Candidate> findAllByCheckCandidate(CandidateCheck candidateCheck);
+    List<Candidate> findAllByCheckCandidate(CandidateCheck candidateCheck);
 
     Set<Candidate> findAllByFirstNameAndLastName(String firstName, String lastName);
 
