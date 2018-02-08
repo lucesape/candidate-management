@@ -6,8 +6,10 @@ import org.springframework.util.ReflectionUtils;
 import ro.msg.cm.exception.CandidateIsAlreadyValidatedException;
 import ro.msg.cm.exception.CandidateNotFoundException;
 import ro.msg.cm.model.Candidate;
+import ro.msg.cm.pojo.Duplicate;
 import ro.msg.cm.repository.CandidateRepository;
 import ro.msg.cm.types.CandidateCheck;
+import ro.msg.cm.types.DuplicateType;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -59,6 +61,42 @@ public class ValidationService {
                 throw new CandidateNotFoundException("Candidate with id: " + id + " was not found");
             }
         }
+    }
+
+    public void validate(Long id) {
+        if (!duplicateOn(id, DuplicateType.ON_EMAIL)) {
+            candidateRepository.setCheckCandidateForId(CandidateCheck.VALIDATED, id);
+        }
+    }
+
+    public void validate(List<Long> ids) {
+        for (long id : ids) {
+            if (duplicateOn(id, DuplicateType.ON_EMAIL)) {
+                ids.remove(id);
+            }
+        }
+        candidateRepository.setCheckCandidateForIdIn(CandidateCheck.VALIDATED, ids);
+    }
+
+    private boolean duplicateOn(Long id, DuplicateType duplicateType) {
+        DuplicateFinderService duplicateFinderService = new DuplicateFinderService(candidateRepository);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(id, CandidateCheck.VALIDATED);
+        boolean condition = false;
+        for (Duplicate duplicate : duplicates) {
+            condition = duplicate.getDuplicateType().equals(duplicateType);
+            if (condition) {
+                break;
+            }
+        }
+        return condition;
+    }
+
+    public List<Candidate> getValidCandidates() {
+        return candidateRepository.findAllByCheckCandidate(CandidateCheck.VALIDATED);
+    }
+
+    public List<Candidate> getNonValidCandidates() {
+        return candidateRepository.findAllByCheckCandidate(CandidateCheck.NOT_YET_VALIDATED);
     }
 
 }

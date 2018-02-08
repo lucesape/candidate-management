@@ -11,10 +11,12 @@ import org.mockito.stubbing.Answer;
 import ro.msg.cm.model.Candidate;
 import ro.msg.cm.pojo.Duplicate;
 import ro.msg.cm.repository.CandidateRepository;
+import ro.msg.cm.types.CandidateCheck;
 import ro.msg.cm.types.DuplicateType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.when;
@@ -28,27 +30,28 @@ public class DuplicateFinderServiceTest {
     private CandidateRepository mockCandidateRepository;
 
     private List<Candidate> candidateList;
+    private CandidateCheck candidateCheck = CandidateCheck.NOT_YET_VALIDATED;
 
     private void setUpMockCandidateRepository() {
-        when(mockCandidateRepository.findAllByFirstNameAndLastName(Mockito.anyString(), Mockito.anyString())).thenAnswer(
-                (Answer<List<Candidate>>) answer ->
+        when(mockCandidateRepository.findAllByFirstNameAndLastNameAndCheckCandidate(Mockito.anyString(), Mockito.anyString(), Mockito.any(CandidateCheck.class))).thenAnswer(
+                (Answer<Set<Candidate>>) answer ->
                         candidateList.stream().
-                                filter(x -> x.getFirstName().equals(answer.getArgumentAt(0, String.class)) && x.getLastName().equals(answer.getArgumentAt(1, String.class))).
-                                collect(Collectors.toList())
+                                filter(x -> x.getFirstName().equals(answer.getArgumentAt(0, String.class)) && x.getLastName().equals(answer.getArgumentAt(1, String.class)) && x.getCheckCandidate().equals(answer.getArgumentAt(2, CandidateCheck.class))).
+                                collect(Collectors.toSet())
         );
 
-        when(mockCandidateRepository.findAllByEmail(Mockito.anyString())).thenAnswer(
-                (Answer<List<Candidate>>) answer ->
+        when(mockCandidateRepository.findAllByEmailAndCheckCandidate(Mockito.anyString(), Mockito.any(CandidateCheck.class))).thenAnswer(
+                (Answer<Set<Candidate>>) answer ->
                         candidateList.stream().
-                                filter(x -> x.getEmail().equals(answer.getArgumentAt(0, String.class))).
-                                collect(Collectors.toList())
+                                filter(x -> x.getEmail().equals(answer.getArgumentAt(0, String.class)) && x.getCheckCandidate().equals(answer.getArgumentAt(1, CandidateCheck.class))).
+                                collect(Collectors.toSet())
         );
 
-        when(mockCandidateRepository.findAllByPhone(Mockito.anyString())).thenAnswer(
-                (Answer<List<Candidate>>) answer ->
+        when(mockCandidateRepository.findAllByPhoneAndCheckCandidate(Mockito.anyString(), Mockito.any(CandidateCheck.class))).thenAnswer(
+                (Answer<Set<Candidate>>) answer ->
                         candidateList.stream().
-                                filter(x -> x.getPhone().equals(answer.getArgumentAt(0, String.class))).
-                                collect(Collectors.toList())
+                                filter(x -> x.getPhone().equals(answer.getArgumentAt(0, String.class)) && x.getCheckCandidate().equals(answer.getArgumentAt(1, CandidateCheck.class))).
+                                collect(Collectors.toSet())
         );
 
         when(mockCandidateRepository.findOne(Mockito.anyLong())).thenAnswer(
@@ -113,19 +116,19 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNothing1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(1L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(1L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",0,duplicates.size());
     }
 
     @Test
     public void findDuplicatesWithNothing2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(2L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(2L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",0,duplicates.size());
     }
 
     @Test
     public void findDuplicatesWithName1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(7L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(7L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications: ",1,duplicates.size());
         Assert.assertEquals("Assert type of duplication: ", DuplicateType.ON_NAME,duplicates.get(0).getDuplicateType());
         Assert.assertEquals("Assert duplication's id: ",8L,duplicates.get(0).getIds().toArray()[0]);
@@ -133,7 +136,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithName2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(8L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(8L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",1,duplicates.size());
         Assert.assertEquals("Assert type of duplication:", DuplicateType.ON_NAME,duplicates.get(0).getDuplicateType());
         Assert.assertEquals("Assert duplication's id:",7L, duplicates.get(0).getIds().toArray()[0]);
@@ -141,7 +144,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithPhone1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(14L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(14L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",1,duplicates.size());
         Assert.assertEquals("Assert type of duplication:", DuplicateType.ON_PHONE,duplicates.get(0).getDuplicateType());
         Assert.assertEquals("Assert duplication's id:", 15L,duplicates.get(0).getIds().toArray()[0]);
@@ -149,7 +152,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithPhone2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(15L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(15L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",1,duplicates.size());
         Assert.assertEquals("Assert type of duplication:", DuplicateType.ON_PHONE,duplicates.get(0).getDuplicateType());
         Assert.assertEquals("Assert duplication's id:", 14L,duplicates.get(0).getIds().toArray()[0]);
@@ -157,7 +160,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithEmail1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(21L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(21L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",1,duplicates.size());
         Assert.assertEquals("Assert type of duplication:", DuplicateType.ON_EMAIL,duplicates.get(0).getDuplicateType());
         Assert.assertEquals("Assert duplication's id:", 22L,duplicates.get(0).getIds().toArray()[0]);
@@ -165,7 +168,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithEmail2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(22L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(22L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",1,duplicates.size());
         Assert.assertEquals("Assert type of duplication:", DuplicateType.ON_EMAIL,duplicates.get(0).getDuplicateType());
         Assert.assertEquals("Assert duplication's id:", 21L,duplicates.get(0).getIds().toArray()[0]);
@@ -173,7 +176,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNameAndPhone1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(28L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(28L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",2,duplicates.size());
         for (Duplicate duplicate : duplicates) {
             Assert.assertTrue("Assert type of duplication:",duplicate.getDuplicateType()!= DuplicateType.ON_EMAIL);
@@ -184,7 +187,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNameAndPhone2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(29L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(29L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:",2,duplicates.size());
         for (Duplicate duplicate : duplicates) {
             Assert.assertTrue("Assert type of duplication:",duplicate.getDuplicateType()!= DuplicateType.ON_EMAIL);
@@ -195,7 +198,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNameAndEmail1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(35L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(35L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:", 2, duplicates.size());
         for (Duplicate duplicate : duplicates) {
             Assert.assertTrue("Assert type of duplication:", duplicate.getDuplicateType() != DuplicateType.ON_PHONE);
@@ -206,7 +209,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNameAndEmail2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(36L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(36L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:", 2, duplicates.size());
         for (Duplicate duplicate : duplicates) {
             Assert.assertTrue("Assert type of duplication:", duplicate.getDuplicateType() != DuplicateType.ON_PHONE);
@@ -217,7 +220,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithPhoneAndEmail1(){
-    List<Duplicate> duplicates = duplicateFinderService.getDuplicates(42L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(42L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:", 2, duplicates.size());
         for (Duplicate duplicate : duplicates) {
         Assert.assertTrue("Assert type of duplication:", duplicate.getDuplicateType() != DuplicateType.ON_NAME);
@@ -228,7 +231,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithPhoneAndEmail2(){
-    List<Duplicate> duplicates = duplicateFinderService.getDuplicates(43L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(43L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:", 2, duplicates.size());
         for (Duplicate duplicate : duplicates) {
         Assert.assertTrue("Assert type of duplication:", duplicate.getDuplicateType() != DuplicateType.ON_NAME);
@@ -239,7 +242,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNameAndPhoneAndEmail1() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(49L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(49L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:", 3, duplicates.size());
         Assert.assertEquals("Assert duplication's id:", 50L, duplicates.get(0).getIds().toArray()[0]);
         Assert.assertEquals("Assert duplication's id:", 50L, duplicates.get(1).getIds().toArray()[0]);
@@ -248,7 +251,7 @@ public class DuplicateFinderServiceTest {
 
     @Test
     public void findDuplicatesWithNameAndPhoneAndEmail2() {
-        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(50L);
+        List<Duplicate> duplicates = duplicateFinderService.getDuplicates(50L, candidateCheck);
         Assert.assertEquals("Assert the nr of duplications:", 3, duplicates.size());
         Assert.assertEquals("Assert duplication's id:", 49L, duplicates.get(0).getIds().toArray()[0]);
         Assert.assertEquals("Assert duplication's id:", 49L, duplicates.get(1).getIds().toArray()[0]);

@@ -6,6 +6,7 @@ import ro.msg.cm.model.Candidate;
 import ro.msg.cm.pojo.Duplicate;
 import ro.msg.cm.service.DuplicateFinderService;
 import ro.msg.cm.service.ValidationService;
+import ro.msg.cm.types.CandidateCheck;
 
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,35 @@ public class CandidateValidationController {
         validationService.deleteSelectedEntries(ids);
     }
 
-    @GetMapping("/duplicates/{id}")
-    public List<Duplicate> getDuplicates(@PathVariable Long id) {
-        return duplicateFinderService.getDuplicates(id);
+    @PutMapping("/validate/{id}")
+    public void validateCandidate(@PathVariable Long id) {
+        validationService.validate(id);
     }
+
+    @PutMapping("/multiple-validate/{ids}")
+    public void validateCandidates(@PathVariable List<Long> ids) {
+        validationService.validate(ids);
+    }
+
+    @GetMapping("/duplicates-on-valid/{id}")
+    public List<Duplicate> getValidDuplicates(@PathVariable Long id) {
+        return duplicateFinderService.getDuplicates(id, CandidateCheck.VALIDATED);
+    }
+
+    @GetMapping("/duplicates-on-non-valid/{id}")
+    public List<Duplicate> getNonValidDuplicates(@PathVariable Long id) {
+        return duplicateFinderService.getDuplicates(id, CandidateCheck.NOT_YET_VALIDATED);
+    }
+
+    @GetMapping("/valid")
+    public List<Candidate> getValidCandidates() {
+        return validationService.getValidCandidates();
+    }
+
+    @GetMapping("/non_valid")
+    public List<Candidate> getNonValidCandidates() {
+
+        return validationService.getNonValidCandidates();
+    }
+
 }

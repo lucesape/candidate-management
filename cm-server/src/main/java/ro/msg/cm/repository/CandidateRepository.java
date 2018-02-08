@@ -15,10 +15,13 @@
  */
 package ro.msg.cm.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ro.msg.cm.model.Candidate;
 import ro.msg.cm.types.CandidateCheck;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
@@ -26,9 +29,27 @@ public interface CandidateRepository extends CrudRepository<Candidate, Long> {
 
     List<Candidate> findAllByCheckCandidate(CandidateCheck candidateCheck);
 
-    Set<Candidate> findAllByFirstNameAndLastName(String firstName, String lastName);
+    List<Candidate> findAllByIdIn(List<Long> ids);
 
-    Set<Candidate> findAllByEmail(String email);
+    Set<Candidate> findAllByFirstNameAndLastNameAndCheckCandidate(String firstName, String lastName, CandidateCheck candidateCheck);
 
-    Set<Candidate> findAllByPhone(String phone);
+    Set<Candidate> findAllByEmailAndCheckCandidate(String email, CandidateCheck candidateCheck);
+
+    Set<Candidate> findAllByPhoneAndCheckCandidate(String phone, CandidateCheck candidateCheck);
+
+    Long countByFirstNameAndLastNameAndCheckCandidate(String firstName, String lastName, CandidateCheck candidateCheck);
+
+    Long countByEmailAndCheckCandidate(String email, CandidateCheck candidateCheck);
+
+    Long countByPhoneAndCheckCandidate(String phone, CandidateCheck candidateCheck);
+
+    @Transactional
+    @Modifying
+    @Query("update Candidate c set c.checkCandidate = ?1 where c.id in ?2")
+    void setCheckCandidateForIdIn(CandidateCheck candidateCheck, List<Long> ids);
+
+    @Transactional
+    @Modifying
+    @Query("update Candidate c set c.checkCandidate = ?1 where c.id = ?2")
+    void setCheckCandidateForId(CandidateCheck candidateCheck, Long id);
 }
