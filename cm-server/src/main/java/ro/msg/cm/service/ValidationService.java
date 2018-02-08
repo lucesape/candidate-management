@@ -23,7 +23,7 @@ public class ValidationService {
         this.candidateRepository = candidateRepository;
     }
 
-    public void patchCandidate(Map<Object, Object> patchCandidate, Long id){
+    public Candidate patchCandidate(Map<Object, Object> patchCandidate, Long id){
         Candidate candidate = candidateRepository.findOne(id);
         if(candidate!=null) {
             patchCandidate.forEach((k, v) -> {
@@ -32,7 +32,7 @@ public class ValidationService {
                 ReflectionUtils.setField(field, candidate, v);
                 field.setAccessible(false);
             });
-            candidateRepository.save(candidate);
+            return candidateRepository.save(candidate);
         }else {
             throw new CandidateNotFoundException();
         }
