@@ -41,7 +41,7 @@ public class ValidationService {
     public void deleteSelectedEntry(Long id) {
         Candidate candidate = candidateRepository.findOne(id);
         if (candidate != null) {
-            if (!candidate.getCheckCandidate().equals(CandidateCheck.VALIDATED)) {
+            if (!CandidateCheck.VALIDATED.equals(candidate.getCheckCandidate())) {
                 candidateRepository.delete(id);
             } else {
                 throw new CandidateIsAlreadyValidatedException();
