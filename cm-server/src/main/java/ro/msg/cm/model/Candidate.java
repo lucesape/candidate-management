@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.univocity.parsers.annotations.Parsed;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Email;
 import ro.msg.cm.types.CandidateCheck;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -17,12 +20,16 @@ public class Candidate {
 
 	private @Id @GeneratedValue Long id;
 	@Parsed
+	@NotNull
 	private String firstName;
 	@Parsed
+	@NotNull
 	private String lastName;
 	@Parsed
+	@Size(min = 10, max = 15)
 	private String phone;
 	@Parsed
+	@Email
 	private String email;
 	private @ManyToOne
     @JoinColumn(name = "education_id")
