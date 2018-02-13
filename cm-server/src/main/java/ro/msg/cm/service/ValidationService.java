@@ -1,5 +1,6 @@
 package ro.msg.cm.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -15,6 +16,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ValidationService {
 
@@ -26,7 +28,7 @@ public class ValidationService {
     }
 
     public Candidate patchCandidate(Map<Object, Object> patchCandidate, Long id){
-        Candidate candidate = candidateRepository.findOne(id);
+        Candidate candidate = candidateRepository.findByIdAndCheckCandidate(id, CandidateCheck.NOT_YET_VALIDATED);
         if(candidate!=null) {
             patchCandidate.forEach((k, v) -> {
                 Field field = ReflectionUtils.findField(Candidate.class, String.valueOf(k));
@@ -41,20 +43,16 @@ public class ValidationService {
     }
 
     public void deleteSelectedEntry(Long id) {
-        Candidate candidate = candidateRepository.findOne(id);
+        Candidate candidate = candidateRepository.findByIdAndCheckCandidate(id, CandidateCheck.NOT_YET_VALIDATED);
         if (candidate != null) {
-            if (!CandidateCheck.VALIDATED.equals(candidate.getCheckCandidate())) {
                 candidateRepository.delete(id);
             } else {
                 throw new CandidateIsAlreadyValidatedException();
             }
-        } else {
-            throw new CandidateNotFoundException();
-        }
     }
 
     public void deleteSelectedEntries(List<Long> ids) {
-        for (Long id : ids) {
+        for (long id : ids) {
             if (candidateRepository.exists(id)) {
                 candidateRepository.delete(id);
             }else {
@@ -64,8 +62,12 @@ public class ValidationService {
     }
 
     public void validate(Long id) {
-        if (!duplicateOn(id, DuplicateType.ON_EMAIL)) {
-            candidateRepository.setCheckCandidateForId(CandidateCheck.VALIDATED, id);
+        if(candidateRepository.findCandidateById(id).isPresent()) {
+            if (!duplicateOn(id, DuplicateType.ON_EMAIL)) {
+                candidateRepository.setCheckCandidateForId(CandidateCheck.VALIDATED, id);
+            }
+        } else {
+            throw new CandidateNotFoundException();
         }
     }
 
@@ -98,6 +100,5 @@ public class ValidationService {
     public List<Candidate> getNonValidCandidates() {
         return candidateRepository.findAllByCheckCandidate(CandidateCheck.NOT_YET_VALIDATED);
     }
-
 }
 
