@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/candidateValidation")
+@RequestMapping("/api/candidate-validation")
 public class CandidateValidationController {
 
     private final ValidationService validationService;
@@ -24,17 +24,17 @@ public class CandidateValidationController {
         this.duplicateFinderService = duplicateFinderService;
     }
 
-    @PatchMapping("/updateCandidate/{id}")
+    @PatchMapping("/update-candidate/{id}")
     public @ResponseBody Candidate patchCandidate(@RequestBody Map<Object, Object> toPatch, @PathVariable Long id){
         return validationService.patchCandidate(toPatch, id);
     }
 
-    @DeleteMapping("/deleteCandidate/{id}")
+    @DeleteMapping("/delete-candidate/{id}")
     public void deleteCandidate(@PathVariable Long id){
         validationService.deleteSelectedEntry(id);
     }
 
-    @DeleteMapping("/deleteCandidates/{ids}")
+    @DeleteMapping("/delete-candidates/{ids}")
     public void deleteCandidate(@PathVariable List<Long> ids){
         validationService.deleteSelectedEntries(ids);
     }
@@ -64,9 +64,8 @@ public class CandidateValidationController {
         return validationService.getValidCandidates();
     }
 
-    @GetMapping("/non_valid")
+    @GetMapping("/non-valid")
     public List<Candidate> getNonValidCandidates() {
-
         return validationService.getNonValidCandidates();
     }
 

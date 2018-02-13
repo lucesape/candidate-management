@@ -23,6 +23,7 @@ import ro.msg.cm.types.CandidateCheck;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface CandidateRepository extends CrudRepository<Candidate, Long> {
@@ -52,4 +53,8 @@ public interface CandidateRepository extends CrudRepository<Candidate, Long> {
     @Modifying
     @Query("update Candidate c set c.checkCandidate = ?1 where c.id = ?2")
     void setCheckCandidateForId(CandidateCheck candidateCheck, Long id);
+
+    Candidate findByIdAndCheckCandidate(Long id, CandidateCheck notYetValidated);
+
+    Optional<Object> findCandidateById(Long id);
 }
