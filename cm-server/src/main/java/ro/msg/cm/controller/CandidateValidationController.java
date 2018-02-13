@@ -25,7 +25,7 @@ public class CandidateValidationController {
     }
 
     @PatchMapping("/update-candidate/{id}")
-    public @ResponseBody Candidate patchCandidate(@RequestBody Map<Object, Object> toPatch, @PathVariable Long id){
+    public Candidate patchCandidate(@RequestBody Map<String, Object> toPatch, @PathVariable Long id) {
         return validationService.patchCandidate(toPatch, id);
     }
 

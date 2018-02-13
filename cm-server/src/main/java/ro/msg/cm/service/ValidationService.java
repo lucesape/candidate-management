@@ -1,11 +1,14 @@
 package ro.msg.cm.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import ro.msg.cm.exception.CandidateIsAlreadyValidatedException;
 import ro.msg.cm.exception.CandidateNotFoundException;
+import ro.msg.cm.exception.PatchCandidateInvalidKeyException;
+import ro.msg.cm.exception.PatchCandidateInvalidValueException;
 import ro.msg.cm.model.Candidate;
 import ro.msg.cm.pojo.Duplicate;
 import ro.msg.cm.repository.CandidateRepository;
@@ -13,6 +16,10 @@ import ro.msg.cm.types.CandidateCheck;
 import ro.msg.cm.types.DuplicateType;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,20 +34,36 @@ public class ValidationService {
         this.candidateRepository = candidateRepository;
     }
 
-    public Candidate patchCandidate(Map<Object, Object> patchCandidate, Long id){
-        Candidate candidate = candidateRepository.findByIdAndCheckCandidate(id, CandidateCheck.NOT_YET_VALIDATED);
-        if(candidate!=null) {
-            patchCandidate.forEach((k, v) -> {
-                Field field = ReflectionUtils.findField(Candidate.class, String.valueOf(k));
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, candidate, v);
-                field.setAccessible(false);
+    public Candidate patchCandidate(Map<String, Object> patchCandidate, Long id) {
+        Candidate candidate = candidateRepository.findOne(id);
+        List<Field> fields = Arrays.asList(Candidate.class.getDeclaredFields());
+        if (candidate != null) {
+            for (Iterator<String> iterator = patchCandidate.keySet().iterator(); iterator.hasNext(); ) {
+                String key = iterator.next();
+                if (key.equalsIgnoreCase("email") &&
+                        !isEmail(patchCandidate.get(key))) {
+                    throw new PatchCandidateInvalidValueException();
+                }
+                if (key.equalsIgnoreCase("phone") &&
+                        !isPhoneNr(patchCandidate.get(key))) {
+                    throw new PatchCandidateInvalidValueException();
+                }
+            }
+            patchCandidate.forEach((String k, Object v) -> {
+                try {
+                    Field field = fields.stream().filter(x -> x.getName().equalsIgnoreCase(StringUtils.trimAllWhitespace(k))).findFirst().orElseThrow(PatchCandidateInvalidKeyException::new);
+                    Method method = Candidate.class.getDeclaredMethod("set" + StringUtils.capitalize(field.getName()), field.getType());
+                    method.invoke(candidate, v);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new PatchCandidateInvalidKeyException();
+                }
             });
             return candidateRepository.save(candidate);
-        }else {
+        } else {
             throw new CandidateNotFoundException();
         }
     }
+
 
     public void deleteSelectedEntry(Long id) {
         Candidate candidate = candidateRepository.findByIdAndCheckCandidate(id, CandidateCheck.NOT_YET_VALIDATED);
@@ -99,6 +122,14 @@ public class ValidationService {
 
     public List<Candidate> getNonValidCandidates() {
         return candidateRepository.findAllByCheckCandidate(CandidateCheck.NOT_YET_VALIDATED);
+    }
+
+    private boolean isPhoneNr(Object object) {
+        return object == null || object.toString().matches("^\\d{10,15}$");
+    }
+
+    private boolean isEmail(Object object) {
+        return object == null || new EmailValidator().isValid(object.toString(), null);
     }
 }
 
