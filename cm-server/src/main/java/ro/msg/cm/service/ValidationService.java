@@ -73,9 +73,9 @@ public class ValidationService {
 
     public void validate(List<Long> ids) {
         for (long id : ids) {
-            if (duplicateOn(id, DuplicateType.ON_EMAIL)) {
-                ids.remove(id);
-            }
+                if (duplicateOn(id, DuplicateType.ON_EMAIL)) {
+                    ids.remove(id);
+                }
         }
         candidateRepository.setCheckCandidateForIdIn(CandidateCheck.VALIDATED, ids);
     }
