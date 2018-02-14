@@ -39,12 +39,12 @@ public class CandidateValidationController {
         validationService.deleteSelectedEntries(ids);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add-candidate")
     public Candidate saveUnvalidatedCandidate(@RequestBody Candidate candidate) {
         return validationService.saveUnvalidatedCandidate(candidate);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add-candidates")
     public Iterable<Candidate> saveUnvalidatedCandidates(@RequestBody List<Candidate> candidates) {
         return validationService.saveUnvalidatedCandidates(candidates);
     }
