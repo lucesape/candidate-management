@@ -6,9 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import ro.msg.cm.types.CandidateCheck;
+import ro.msg.cm.validator.OneNotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @Data
 @Entity
 @NoArgsConstructor
+@OneNotNull({"phone", "email"})
 public class Candidate {
 
 	private @Id @GeneratedValue Long id;
@@ -27,6 +30,7 @@ public class Candidate {
 	private String lastName;
 	@Parsed
 	@Size(min = 10, max = 15)
+	@Pattern(regexp = "^\\s*(?:\\+?(\\d{1,3}))?(\\d{3})(\\d{3})(\\d{4})\\s*$")
 	private String phone;
 	@Parsed
 	@Email

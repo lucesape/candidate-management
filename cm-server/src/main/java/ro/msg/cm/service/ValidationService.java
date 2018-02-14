@@ -68,15 +68,15 @@ public class ValidationService {
     public void deleteSelectedEntry(Long id) {
         Candidate candidate = candidateRepository.findByIdAndCheckCandidate(id, CandidateCheck.NOT_YET_VALIDATED);
         if (candidate != null) {
-                candidateRepository.delete(id);
-            } else {
-                throw new CandidateIsAlreadyValidatedException();
-            }
+            candidateRepository.delete(id);
+        } else {
+            throw new CandidateIsAlreadyValidatedException();
+        }
     }
 
     public void deleteSelectedEntries(List<Long> ids) {
         for (long id : ids) {
-            if (candidateRepository.exists(id)) {
+            if (candidateRepository.findByIdAndCheckCandidate(id, CandidateCheck.NOT_YET_VALIDATED)!=null) {
                 candidateRepository.delete(id);
             }else {
                 throw new CandidateNotFoundException("Candidate with id: " + id + " was not found");
@@ -96,9 +96,11 @@ public class ValidationService {
 
     public void validate(List<Long> ids) {
         for (long id : ids) {
+            if(candidateRepository.findCandidateById(id).isPresent()) {
                 if (duplicateOn(id, DuplicateType.ON_EMAIL)) {
                     ids.remove(id);
                 }
+            }
         }
         candidateRepository.setCheckCandidateForIdIn(CandidateCheck.VALIDATED, ids);
     }
