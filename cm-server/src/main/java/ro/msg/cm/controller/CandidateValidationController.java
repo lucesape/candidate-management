@@ -39,6 +39,16 @@ public class CandidateValidationController {
         validationService.deleteSelectedEntries(ids);
     }
 
+    @PostMapping("/add")
+    public Candidate saveUnvalidatedCandidate(@RequestBody Candidate candidate) {
+        return validationService.saveUnvalidatedCandidate(candidate);
+    }
+
+    @PostMapping("/add")
+    public Iterable<Candidate> saveUnvalidatedCandidates(@RequestBody List<Candidate> candidates) {
+        return validationService.savseUnvalidatedCandidates(candidates);
+    }
+
     @PutMapping("/validate/{id}")
     public void validateCandidate(@PathVariable Long id) {
         validationService.validate(id);

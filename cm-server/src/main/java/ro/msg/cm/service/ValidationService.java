@@ -133,5 +133,15 @@ public class ValidationService {
     private boolean isEmail(Object object) {
         return object == null || new EmailValidator().isValid(object.toString(), null);
     }
+
+    public Candidate saveUnvalidatedCandidate(Candidate candidate) {
+        candidate.setCheckCandidate(CandidateCheck.NOT_YET_VALIDATED);
+        return candidateRepository.save(candidate);
+    }
+
+    public Iterable<Candidate> saveUnvalidatedCandidates(List<Candidate> candidates) {
+        candidates.forEach(x -> x.setCheckCandidate(CandidateCheck.NOT_YET_VALIDATED));
+        return candidateRepository.save(candidates);
+    }
 }
 
