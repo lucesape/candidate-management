@@ -46,7 +46,7 @@ public class CandidateValidationController {
 
     @PostMapping("/add")
     public Iterable<Candidate> saveUnvalidatedCandidates(@RequestBody List<Candidate> candidates) {
-        return validationService.savseUnvalidatedCandidates(candidates);
+        return validationService.saveUnvalidatedCandidates(candidates);
     }
 
     @PutMapping("/validate/{id}")
